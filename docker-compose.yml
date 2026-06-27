@@ -1,0 +1,15 @@
+services:
+  imgtrans:
+    build: .
+    image: imgtrans:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - IMGTRANS_ARTIFACTS_DIR=/app/artifacts
+      - HF_HOME=/app/hf_cache
+      # - IMGTRANS_INFER_CONFIG=/app/configs/infer.yaml
+      # - IMGTRANS_LLM_API_KEY=...   # optional LLM brain (off by default)
+    volumes:
+      - ./artifacts:/app/artifacts
+      - ./hf_cache:/app/hf_cache
+    command: uvicorn imgtrans.api.app_combined:app --host 0.0.0.0 --port 8000

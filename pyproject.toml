@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "imgtrans"
+version = "1.0.0"
+description = "Document-Image Machine Translation — OCR the text inside an image/scan, translate it with a trainable MT core (m2m100), and render the translation back onto the page preserving layout, orchestrated by a deterministic agent (D1-D5)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Le Dinh Minh Quan" }]
+keywords = ["nlp", "machine-translation", "ocr", "document-image-translation", "scene-text-translation",
+            "layout-preserving", "overlay", "m2m100", "tesseract", "agent"]
+
+# Core deps only — the package, the dictionary MT baseline, the SeedEngine offline OCR,
+# the layout/fit-estimate, the agent, and the metrics all run with just these (no torch,
+# no tesseract). Heavy ML / OCR / serving / report libs are extras, imported lazily.
+dependencies = [
+    "numpy>=1.23",
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "Pillow>=9.5",
+]
+
+[project.optional-dependencies]
+ml = ["torch>=2.1", "transformers>=4.40", "datasets>=2.18", "accelerate>=0.30", "sentencepiece>=0.1.99", "sacrebleu>=2.3"]
+ocr = ["pytesseract>=0.3.10", "PyMuPDF>=1.23"]
+api = ["fastapi>=0.110", "uvicorn[standard]>=0.29", "gradio>=4.0", "python-multipart>=0.0.9"]
+report = ["reportlab>=4.0", "python-pptx>=0.6.23", "matplotlib>=3.7"]
+dev = ["pytest>=7.4", "ruff>=0.4"]
+all = [
+    "torch>=2.1", "transformers>=4.40", "datasets>=2.18", "accelerate>=0.30", "sentencepiece>=0.1.99", "sacrebleu>=2.3",
+    "pytesseract>=0.3.10", "PyMuPDF>=1.23",
+    "fastapi>=0.110", "uvicorn[standard]>=0.29", "gradio>=4.0", "python-multipart>=0.0.9",
+    "reportlab>=4.0", "python-pptx>=0.6.23", "matplotlib>=3.7",
+]
+
+[project.scripts]
+imgtrans = "imgtrans.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+imgtrans = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"

@@ -1,0 +1,45 @@
+# Inference / serving config for imgtrans. Used by `imgtrans serve` and the API
+# (set IMGTRANS_INFER_CONFIG to this file).
+project_title: Document-Image Machine Translation System
+author: Le Dinh Minh Quan
+student_id: "23127460"
+
+mt:
+  base_model: facebook/m2m100_418M
+  src_lang: en
+  tgt_lang: fr
+  num_beams: 4
+  max_source_length: 200
+  max_target_length: 200
+
+ocr:
+  engine: auto                           # tesseract when available; SeedEngine on synthetic; stub otherwise
+  lang: eng
+  dpi: 200
+  psm: 3
+
+render:
+  mode: overlay                          # overlay | side_by_side | text_only
+  max_font_size: 48
+  min_font_size: 8
+  box_padding: 3
+  line_spacing: 1.12
+  fill_color: white
+  text_color: black
+
+agent:
+  quality_min: 0.30
+  ocr_confidence_min: 0.50
+  verify_enabled: true
+  verify_min_chrf: 0.30
+  min_fit_rate: 0.60
+  needs_review_conf: 0.45
+  llm_fallback_enabled: false            # optional LLM brain OFF by default (zero paid API calls)
+
+serving:
+  model_version: v1
+  api_title: Document-Image Machine Translation API
+  api_version: 1.0.0
+  log_jobs: true
+  max_file_mb: 25
+  max_pages: 30
